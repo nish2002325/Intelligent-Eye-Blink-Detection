@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Eye Blink Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <!-- Background Video -->
+    <video autoplay loop muted playsinline id="background-video-top">
+        <source src="{{ url_for('static', filename='images/background.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Registration Form Container -->
+    <div class="login-container">
+        <h2>Register</h2>
+        
+        <!-- Error Message -->
+        {% if error %}
+        <p class="error-message">{{ error }}</p>
+        {% endif %}
+
+        <!-- Registration Form -->
+        <form action="{{ url_for('register') }}" method="POST">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <input type="text" name="driver_reg" placeholder="Driver Registration Number" required>
+            
+            <select name="car_brand" required>
+                <option value="" disabled selected>Select Car Brand</option>
+                <option value="Toyota">Toyota</option>
+                <option value="Ford">Ford</option>
+                <option value="BMW">BMW</option>
+                <option value="Tesla">Tesla</option>
+            </select>
+
+            <input type="text" name="car_number" placeholder="Car Number" required>
+            <input type="date" name="driving_date" required>
+
+            <button type="submit" class="btn-login">Register</button>
+        </form>
+
+        <!-- Login Link -->
+        <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+    </div>
+</body>
+</html>

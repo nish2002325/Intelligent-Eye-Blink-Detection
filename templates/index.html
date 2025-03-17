@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Eye Blink Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+
+    <!-- Background Video -->
+    <video autoplay loop muted playsinline id="background-video-top">
+        <source src="{{ url_for('static', filename='images/background.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Dashboard Container -->
+    <div class="dashboard-container">
+        <h1>Welcome, {{ user }}</h1>
+        <p><strong>Driver Registration Number:</strong> {{ driver }}</p>
+        <p><strong>Car Brand:</strong> {{ car }}</p>
+        <p><strong>Car Number:</strong> {{ car_number }}</p>
+        <p><strong>Driving Date:</strong> {{ date }}</p>
+
+        <!-- Video Feed Container -->
+        <div id="video-container" style="display: none;">
+            <img id="video-feed" src="" alt="Live Video Feed" width="640" height="480">
+        </div>
+
+        <!-- Controls Section -->
+        <div id="controls">
+            <button class="btn btn-start" onclick="start_video()">Start Video</button>
+            <button class="btn btn-stop" onclick="stop_video()">Stop Video</button>
+            <a href="{{ url_for('logout') }}" class="btn btn-logout">Logout</a>
+        </div>
+    </div>
+
+    <!-- JavaScript for Video Feed Operations -->
+    <script>
+        function start_video() {
+            // Send a request to the backend to start the video feed
+            fetch("{{ url_for('start_video') }}")
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "started") {
+                        // Set the video feed source and display the container
+                        document.getElementById("video-feed").src = "{{ url_for('video_feed') }}";
+                        document.getElementById("video-container").style.display = "block";
+                    } else {
+                        // Display an error if the backend reports an issue
+                        alert("Error: " + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error("Error starting video feed:", error);
+                    alert("Unable to start video feed. Please try again.");
+                });
+        }
+
+        function stop_video() {
+            // Send a request to the backend to stop the video feed
+            fetch("{{ url_for('stop_video') }}")
+                .then(response => response.json())
+                .then(() => {
+                    // Clear the video feed source and hide the container
+                    document.getElementById("video-feed").src = "";
+                    document.getElementById("video-container").style.display = "none";
+                })
+                .catch(error => {
+                    console.error("Error stopping video feed:", error);
+                    alert("Unable to stop video feed. Please try again.");
+                });
+        }
+    </script>
+    
+</body>
+</html>
